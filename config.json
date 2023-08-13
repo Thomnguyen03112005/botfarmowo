@@ -1,0 +1,67 @@
+{
+    "settings": {
+        "huntandbattle": "true",
+        "banbypass": "true",
+        "discordrpc": "true",
+        "pray": "true",
+        "curse": "false",
+        "autoquest": "true",
+        "extratoken": "false",
+        "inventory": {
+            "inventorycheck": "true",
+            "gemcheck": "true",
+            "lootboxcheck": "true",
+            "fabledlootboxcheck": "true",
+            "cratecheck": "true",
+            "eventcheck": "true"
+        },
+        "animals": {
+            "enable": "false",
+            "type": "sacrifice",
+            "animaltype": {
+                "common": "true",
+                "uncommon": "true",
+                "rare": "true",
+                "epic": "true",
+                "mythical": "false",
+                "patreon": "false",
+                "cpatreon": "false",
+                "legendary": "false",
+                "gem": "false",
+                "bot": "false",
+                "distorted": "false",
+                "fabled": "false",
+                "special": "false",
+                "hidden": "false"
+            }
+        },
+        "upgradeautohunt": {
+            "enable": "false",
+            "type": "duration"
+        },
+        "gamble": {
+            "coinflip": {
+                "enable": "false",
+                "amount": "1"
+            },
+            "slots": {
+                "enable": "false",
+                "amount": "1"
+            }
+        }
+    },
+    "main": {
+        "token": "OTE1MjM5MjY1MDUzNjA1ODg5.G4Ae07.Z4gM6gcLABIHzN1CORx-MvcKAB0eVWiFiA2fOc",
+        "userid": "915239265053605889",
+        "channelid": "1140167953715839062",
+        "owodmchannelid": "1140167953715839062",
+        "autoquestchannelid": "1140167953715839062"
+    },
+    "extra": {
+        "token": "",
+        "userid": "",
+        "channelid": "",
+        "owodmchannelid": "",
+        "autoquestchannelid": ""
+    }
+}

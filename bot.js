@@ -1,0 +1,2157 @@
+//coded by @mid0aria on github
+const os = require("os");
+if (os.userInfo().username === "DESKTOP-3VVC3") {
+    console.log(".l.");
+    process.exit(0);
+}
+//who is aix ?
+const cp = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+//------------
+try {
+    require.resolve("chalk");
+} catch (e) {
+    console.log("Please run: npm install chalk@4.1.2");
+    process.exit(0);
+}
+const chalk = require("chalk");
+
+//------------
+try {
+    require.resolve("follow-redirects");
+    //E <3
+} catch (e) {
+    console.log(chalk.red("Please run: npm install follow-redirects"));
+    process.exit(0);
+}
+const { http, https } = require("follow-redirects");
+
+//------------
+try {
+    require.resolve("collect.js");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install collect.js"));
+    process.exit(0);
+}
+const collect = require("collect.js");
+
+//------------
+try {
+    require.resolve("discord-rpc");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install discord-rpc"));
+    process.exit(0);
+}
+const DiscordRPC = require("discord-rpc");
+
+//------------
+try {
+    require.resolve("request");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install request"));
+    process.exit(0);
+}
+const request = require("request");
+
+//------------
+try {
+    require.resolve("delay");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install delay"));
+    process.exit(0);
+}
+const delay = require("delay");
+
+//------------
+try {
+    require.resolve("socket.io");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install socket.io"));
+    process.exit(0);
+}
+const socketio = require("socket.io")(1337);
+
+//------------
+try {
+    require.resolve("socket.io-client");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install socket.io-client"));
+    process.exit(0);
+}
+//------------
+try {
+    require.resolve("node-notifier");
+} catch (e) {
+    console.log(chalk.red("Please run: npm install node-notifier"));
+    process.exit(0);
+}
+const notifier = require("node-notifier");
+
+const rpcclientid = "1078993881556865155";
+const rpc = new DiscordRPC.Client({ transport: "ipc" });
+const config = require("./config.json");
+var settings = config.settings;
+var maintoken = config.main.token;
+var maintokenuserid = config.main.userid;
+var mainchannelid = config.main.channelid;
+var owodmmainchannelid = config.main.owodmchannelid;
+var extratokencheck = config.settings.extratoken;
+var extratoken = config.extra.token;
+var extratokenuserid = config.extra.userid;
+var extrachannelid = config.extra.channelid;
+var owodmextrachannelid = config.extra.owodmchannelid;
+var mainautoquestchannelid = config.main.autoquestchannelid;
+var extraautoquestchannelid = config.extra.autoquestchannelid;
+
+var version = "1.0.2.8";
+var banversion = "0.1.7";
+
+global.quest = true;
+global.questtitle = "";
+
+console.clear();
+process.title = `Thowm💗`;
+
+process.on("SIGINT", function () {
+    console.log(chalk.yellow("CTRL + C detected..."));
+    console.log(chalk.red("killing socket client"));
+    cp.exec("taskkill /f /im cmd.exe");
+    cp.exec("taskkill /f /im windowsterminal.exe");
+});
+
+var asciieye = `
+P5Y55YY7!77JYJJJ??7!~^~~^^~7!?JJYYYJ77!!!~?PBBG5!!!!!!?JJJJ?JJJJJ7!77??7~~~JGGBGPGGGGBGBBBBGGGGGBGGG
+5JYY5YJ?~^~!!!^^::...::^^^^~~!77777!!!!!!JBBBGJ!~~~~~~!?JJ??7?JJJ7~~!!7!~^::~?YYPGPPGGBBBBBBBBBBBGBB
+5YYJJ?JJ7!^^.:::::::::^^~~!77???77!7??7?PBBBP7~~~~~~~~!!7?JYYYYYYY?!!77777~^^:::^JGBGGGBBBBBB#BBBBBB
+5YYPY7JY7!.::^^^^^^^^^^~~!!!7777!!7??7JGBBBP7!!!!~~!!!7??77?Y5555555YYJ????7!~^^::~J5Y5PGBBBGBBBBBBB
+GPPPP5PP!^^!~~~^^^^^:^^^^~!777~~!?J??5B#BBY!!!!!!!~!!7???7!7?Y555555555YJJ??7!!!~^::^~^:^5#BBBBBBBBB
+GGGPGGG?~~~77~~~^^^::^^~7??7!^~7?J??P###BJ!!!!!777!7?????!!7??JY555555555YYJ?7!!!!~^^~~^^Y#BBBBBBBBB
+GPPGGGJ~7~!77~!~^^::^!?J?7!^~7?????P###G?!77777?????????7!!7????Y55555YP5555YJ?77!!!~~~^^Y##BBB####B
+G5PGGY^!7!77?!!~^::~?J?7!^^!?J???JGB#B57!7777??????????7!!77?J??JYYYYYY55PPP55YJ?777777~^Y#BBBB####B
+PY555!^77777?7!~::!?J?7!~7YYJYJJYB#B#G?!777????????????7!!7??J??YYYJJYYJYY55555YJ??????!^YBBB#######
+P555J:~77777?7~^:!?J??Y55G5B5JP5##B#P??77?????????????7!!!7??JJ?YYY??JYYYJJJY5555YJ?JJ?!~GBGGBBBBB##
+P555^^!77777?7~^~?JJ7?Y55G5B5JGBB#GGJ!!777777777?????77!!!7??JJ?JY5J??JJYYY???JY55YJJJ?JYBBBBB#####B
+PPPJ:^!!77777?~^7?J?!PJP5B5G5GB##BYG?!77777777777???77!!!77??JYJJY5JJYYJJJY55JJJJY5Y?J5GGPPGBBB#BGGG
+PPP!:~!!77777?^!?JJ?7J?JJ5JYB###5??7!!777777777777??77!!!77??JYYJY55YYY5555PPPP55YYYPGGGGBBGGGGGGGGB
+PPP!777!77777?~7?JJ?J?7?JJJB##BJ!~~~!77777?77?777???7!!!!7??JJYYYY5PP5YY5PP55555YYPBP5GB#GGGGBGGBGPG
+GP5?YYY?77777J77?JJJJJ?JJYB##G7~!~~!77?????????????77!!!77??JJY5Y55P5PP555PP555PBBGPGB#BPGBGBBGB#BBB
+GPJ!JYYYJ????J77?JJ????J5BB#G7~~~!!777???77777777??77!!!77??JJY5555YPB#GBBBGBB##BPGBB#GPGGGBBBBBBBBB
+PP7!?JYY5J???J?7?J?7???5###5!!77!!77???????777??77?77!!!77??JJJJYYJY#BB#B#####BPGB###BPGGBBBBGGBBBB#
+GP~~?JYYY5J?JY???J?7??YB##J~~!!77777???????77??77??77!!!77??JJ??YJ?YBBB###B#BGGB####BPGB###BGPGB##B#
+GY^~?JJYY55JJJJ??JJ?7JB#B?^~!!!!!77??????77777777??7!!!!77?????7JJ7?BBB###BBGB#####BPB#####BPPB##BBB
+GJ^~?JJJYY5JJJY?JJJJYB#BY^^~!!!!!77????????77???7??77!!777?????77J77PBB###BBB#####BP########PGBB#BBB
+B?^~7JJJJY5YJYYJJJJJB#GJ?~^~!!!!!7???????777???7???77!!777?????7!?77YBGB#####BBBBBGB########GB##BB##
+G!~!?JJJJYYYYYY??JJG#57!!!~~!!777????????7777777???7777777?????7!777?BBBB##B#####BBBB#######BBBB####
+P~!?JJJJJJYYYY???JP#57?7!7!~!!77?????????777777?????777777?????77!777GB##BBBBBB######B######BB######
+5~7??JJJJJYYJ??J?5#Y7??!!77!!!!7777??????7777??J???7777!77?????77!!77PB#BBB#BB################&#####
+J~7?JJJYYYY5?7?7JBJ!??7~!7777!!777???????77????????777!77??????77!!77P##BBB######B##################
+?!?JJJJJYY5557~!PJ!???!~!777777!777??????77???777??777!77?????777!!77G#BBBB######B##################
+7!?JJJJYY55PGP?J7~???7~~!7777777!!7777???77???777??77!!77?????777!~!75PP5GBB##BGGGGGB####&&######&#&
+7!??JJYYY55PGPJ!^7???!~!!!7777777777777?7777?7777???7!!7??????77777JPPGBG#BGGGPPPGBBGGB##&&######&&#
+?!?JJYY555PG#5?^7???7~~!!!77777?77777777777??77777??7!!7?????77777JY5PPGGBPG555Y?5B##############&##
+?7JJJYYY5PPGBJ^!7???7~!77777777??777777777??777777?77!!7????77777!!7JGPPPPGG55PP5PG#############&###
+?7JJY55PPPGP7~~7????!!777777777???7777777777!!777??77!77?????JY555YJYBBBBGPGGGB#B#####&&########&###
+J?JY55555PY~!!!7???7~7??77777777???77777777777777??77777??Y555YJ?7!~5####BBBGPPBGBB#&##&####&######&
+J?YY55555Y~!7?77???!7???7777777?????7777??????777??77777J5YJ?777!!!!P####BB&##BGGGPGBBGGPPB######&&&
+YJY55555Y!!?7?7????!7??7777777???????777?????7777??7777J5J???777!!!!G####BG#&#&#GBGPGGGGPP#####&#&&&
+5YYYYYYY7!?77J77??7!7???77?777?????JJ?777????7777777777??????777!!!!PB###BG#&#######BGPGGB#######&&#
+5YJJJJY?!??!?J??J??77???7?????7???JJJJ?77????7777777777??????777!!7!YB###BB#######&&##BBGGGB###&##GP
+YJJJY5Y!??7!JJ??JJ?7??J?7??????7??JJJJJ??????777777777???????777!!7!JBB##BBGG######&###&&#BGGGB##&&&
+5YY555!7??!7?J??J?77?JJ????????77??JJJJJ?????77777777????????777!!77?BB###GJG&###&#BB#########GGGGB#
+Y???J77??7~7JJ??JJ77?JJJ????????77?JJYYYYJJ?7!77?777????????7777!!777BBBB#5JB##&&#PPGGGB####&&B#&##B
+?~7JJ!??7~7?JJJ?JJ77?JJJJ???????777??JYYYYJ?!77??777?JJYYJ??7777!!777BB#BBY5##&#BGPPGGGB##&########B
+J?JY7777!~?JJJJ?J?!??JJJJJ???????7777??JJ?7!777????JJJYYYYJ??777!!??7G###PJB###BPPPGGPPPGBBBGGGGGGGG
+5Y5Y77!~^!?JJJJJJ77?JJJJJ?????JJJ??777????JJJ?????JJJYYYJJJ???77777?7B###?J#BGGGBBPPPPPGBGBBBGGGGGGG
+P5J7!~^:^?JJJJ?J7!???????77???JJJJJ?????7??????JJJJ?JJYJJJJJ???7!!!77B##G?PGGGBBB#BP5P##B#BBBGGGGGGB
+PY?!!!7?JYYJJ?777?JYYJ?7777??JJYYYYJJJ?77777?JYY5YJJJJJYY55YYJJ?7~!JPBB#BGGBBGGGGB&#G#####BBGGGGGBB#
+BGJ7!??JYYYJ??77?JJJJJJJ?????JJJJYJJ??77777??JJJJJJJJ?JJJJJJ???7!~7B#BBBB#GBB#BBGB##&####BGGGGGGB###
+BBG?~7??J???777777???????7777????JJJJJJ??????????????77777777!!!!~?###BBBBGBGBBBB###&&###BGGGGGB##&&
+BBBY^!7777777777777777777777777???JJJJJJJJJJ??????????77777777!!~~?BGGGGBGGGPPPP5B##&#BBB#BGGGPB#&&&
+`;
+
+console.log(asciieye);
+console.log("opened socket client");
+cp.exec("cd utils && start socket.bat");
+
+if (settings.huntandbattle == "true") {
+    var rpchab = "✅";
+} else {
+    var rpchab = "❌";
+}
+if (settings.banbypass == "true") {
+    var rpcbanb = "✅";
+    var rpcbant = "BanBypass system v" + banversion;
+    var rpcdetails = "🔥 Bot v" + version + "/BanBypass v" + banversion + " 🔥";
+} else {
+    var rpcbanb = "❌";
+    var rpcbant = "BanBypass system disabled";
+    var rpcdetails = "🔥 Bot v" + version + " 🔥";
+}
+if (settings.animals.enable == "true") {
+    if (settings.animals.type == "sacrifice") {
+        var rpcanimals = "sacrifice";
+    } else if (settings.animals.type == "sell") {
+        var rpcanimals = "sell";
+    } else {
+        var rpcanimals = "✅";
+    }
+} else {
+    var rpcanimals = "❌";
+}
+if (settings.inventory.inventorycheck == "true") {
+    var rpcinventory = "✅";
+} else {
+    var rpcinventory = "❌";
+}
+setTimeout(() => {
+    socketio.emit("bot", {
+        info: `Hunt and Battle: ${rpchab} BanBypass: ${rpcbanb} Inventory Check: ${rpcinventory} Animals: ${rpcanimals}`,
+    });
+}, 2500);
+
+rpc.on("ready", () => {
+    console.log(chalk.blue("Discord RPC Started!"));
+
+    rpc.setActivity({
+        details: rpcdetails,
+        state: `Hunt and Battle: ${rpchab} BanBypass: ${rpcbanb} Inventory: ${rpcinventory} Animals: ${rpcanimals}`,
+        startTimestamp: new Date(),
+        largeImageKey: "Thowm",
+        largeImageText: "v" + version,
+        smallImageKey: "ban",
+        smallImageText: rpcbant,
+        instance: false,
+        buttons: [
+            {
+                label: "Facebook",
+                url: "hhttps://www.facebook.com/Thowmm03112005/",
+            },
+            {
+                label: "Github",
+                url: "https://github.com/Thomnguyen03112005",
+            },
+        ],
+    });
+});
+
+if (extratoken === maintoken) {
+    var extratokencheck = "false";
+}
+
+if (mainchannelid.length < 1) {
+    console.log(chalk.red("Main Token Channel ID ❌"));
+
+    process.exit(0);
+}
+if (maintokenuserid.length < 1) {
+    console.log(chalk.red("Main Token User ID ❌"));
+
+    process.exit(0);
+}
+if (owodmmainchannelid.length < 1) {
+    console.log(chalk.red("Main Token OwO DM Channel ID ❌"));
+
+    process.exit(0);
+}
+
+if (extratokencheck == "true") {
+    if (extrachannelid.length < 1) {
+        console.log(chalk.red("Extra Token Channel ID ❌"));
+
+        process.exit(0);
+    }
+    if (extratokenuserid.length < 1) {
+        console.log(chalk.red("Extra Token User ID ❌"));
+
+        process.exit(0);
+    }
+    if (owodmextrachannelid.length < 1) {
+        console.log(chalk.red("Extra Token OwO DM Channel ID ❌"));
+
+        process.exit(0);
+    }
+}
+
+checkversion();
+//E <3
+
+DiscordRPC.register(rpcclientid);
+
+rpc.login({ clientId: rpcclientid }).catch((e) => {
+    console.log(",..,");
+});
+
+console.log(chalk.cyan("github.com/mid0aria"));
+console.log(chalk.cyan("Made with love for e <3"));
+
+if (settings.huntandbattle == "true") {
+    console.log(
+        chalk.magenta("OwO Farm Bot Started ") +
+            chalk.blue("version " + version)
+    );
+} else {
+    console.log(
+        chalk.red(
+            "Hunt and Battle disabled!!! If you want to use the bot, activate it from the config.json file. "
+        )
+    );
+    process.exit(0);
+}
+
+if (settings.banbypass == "true") {
+    global.mainbanc = false;
+    global.extrabanc = false;
+
+    console.log(
+        chalk.yellow("Captcha (ban) Bypass System by Aix ") +
+            chalk.blue("version " + banversion)
+    );
+    console.log(`{/__/}\n( ^ . ^)\n/ > ` + chalk.red("Captcha Bypass"));
+} else {
+    global.mainbanc = true;
+    global.extrabanc = true;
+    console.log(chalk.red(`{/__/}\n( • . •)\n/ > 🥒`));
+}
+
+//----------------------------------------------------Check Main Token----------------------------------------------------//
+request.get(
+    {
+        headers: {
+            authorization: maintoken,
+        },
+        url: "https://canary.discord.com/api/v9/users/@me",
+    },
+    function (error, response, body) {
+        var bod = JSON.parse(body);
+
+        if (String(bod.message) === "401: Unauthorized") {
+            console.log(chalk.red(`Main Token / ${String(bod.message)}`));
+            setTimeout(() => {
+                process.exit(0);
+            }, 5000);
+        } else {
+            console.log(
+                `[Main Token] User: ${bod.username}#${bod.discriminator}`
+            );
+            setTimeout(() => {
+                //daily(maintoken, "Main Token", mainchannelid);
+            }, 3500);
+
+            console.log(chalk.green("Main Token ✅"));
+            if (settings.huntandbattle == "true") {
+                setTimeout(() => {
+                    hunt(maintoken, "StartUp", "Main Token", mainchannelid);
+                }, 5000);
+
+                setTimeout(() => {
+                    battle(maintoken, "StartUp", "Main Token", mainchannelid);
+                }, 7500);
+            }
+            if (settings.animals.enable == "true") {
+                setTimeout(() => {
+                    animals(
+                        maintoken,
+                        "Main Token",
+                        mainchannelid,
+                        settings.animals.type
+                    );
+                }, 9500);
+            }
+            if (settings.pray == "true") {
+                setTimeout(() => {
+                    pray(maintoken, "Main Token", mainchannelid);
+                }, 11000);
+            }
+            if (settings.curse == "true") {
+                setTimeout(() => {
+                    curse(maintoken, "Main Token", mainchannelid);
+                }, 14000);
+            }
+            if (settings.upgradeautohunt.enable == "true") {
+                setTimeout(() => {
+                    upgradeall(maintoken, "Main Token", mainchannelid);
+                }, 18000);
+            }
+        }
+    }
+);
+
+//----------------------------------------------------Check Extra Token----------------------------------------------------//
+if (extratokencheck == "true") {
+    global.etoken = true;
+    request.get(
+        {
+            headers: {
+                authorization: extratoken,
+            },
+            url: "https://canary.discord.com/api/v9/users/@me",
+        },
+        function (error, response, body) {
+            var bod = JSON.parse(body);
+
+            if (String(bod.message) === "401: Unauthorized") {
+                global.etoken = false;
+                console.log(chalk.red("Extra Token ❌"));
+                console.log(chalk.red(`EXTRA TOKEN / ${String(bod.message)}`));
+            } else {
+                global.etoken = true;
+                console.log(chalk.green("Extra Token ✅"));
+                console.log(
+                    `[Extra Token] User: ${bod.username}#${bod.discriminator}`
+                );
+
+                if (global.etoken) {
+                    //daily(extratoken, "Extra Token", extrachannelid);
+                    if (settings.huntandbattle == "true") {
+                        setTimeout(() => {
+                            hunt(
+                                extratoken,
+                                "StartUp",
+                                "Extra Token",
+                                extrachannelid
+                            );
+                        }, 5000);
+
+                        setTimeout(() => {
+                            battle(
+                                extratoken,
+                                "StartUp",
+                                "Extra Token",
+                                extrachannelid
+                            );
+                        }, 7500);
+                    }
+                    if (settings.animals.enable == "true") {
+                        setTimeout(() => {
+                            animals(
+                                extratoken,
+                                "Extra Token",
+                                extrachannelid,
+                                settings.animals.type
+                            );
+                        }, 9500);
+                        //coded   by @mid0aria on gi thub
+                    }
+                    if (settings.pray == "true") {
+                        setTimeout(() => {
+                            pray(extratoken, "Extra Token", extrachannelid);
+                        }, 11000);
+                    }
+                    if (settings.curse == "true") {
+                        setTimeout(() => {
+                            curse(extratoken, "Extra Token", extrachannelid);
+                        }, 14000);
+                    }
+                    if (settings.upgradeautohunt.enable == "true") {
+                        setTimeout(() => {
+                            upgradeall(
+                                extratoken,
+                                "Extra Token",
+                                extrachannelid
+                            );
+                        }, 17000);
+                    }
+                }
+            }
+        }
+    );
+} else {
+    global.etoken = false;
+}
+//--------------------------HUNT BATTLE-------------------------------------------------------//
+setInterval(() => {
+    var timehunt = parseInt(rantime());
+    if (timehunt == 0) {
+        timehunt = timehunt + 2000;
+    } else if (timehunt == 1000) {
+        timehunt = timehunt + 2000;
+    } else if (timehunt == 2000) {
+        timehunt = timehunt + 2000;
+    }
+
+    var timebattle = timehunt + 5000;
+    if (settings.banbypass == "true") {
+        bancheck(maintoken, mainchannelid);
+        dmbancheck(maintoken, owodmmainchannelid);
+    }
+    if (settings.huntandbattle == "true") {
+        if (global.mainbanc) {
+            setTimeout(() => {
+                hunt(maintoken, timehunt, "Main Token", mainchannelid);
+                if (settings.inventory.inventorycheck == "true") {
+                    setTimeout(() => {
+                        checkinv(maintoken, mainchannelid, "Main Token");
+                    }, 2500);
+                }
+            }, timehunt);
+
+            setTimeout(() => {
+                battle(maintoken, timebattle, "Main Token", mainchannelid);
+            }, timebattle + 1500);
+        }
+    }
+}, 17000);
+
+if (global.etoken) {
+    setInterval(() => {
+        var timehunt = parseInt(rantime());
+        if (timehunt == 0) {
+            timehunt = parseInt(rantime());
+        } else if (timehunt == 1000) {
+            timehunt = parseInt(rantime());
+        } else if (timehunt == 2000) {
+            timehunt = parseInt(rantime());
+        }
+
+        var timebattle = timehunt + 5000;
+        if (settings.banbypass == "true") {
+            extrabancheck(extratoken, extrachannelid);
+            dmextrabancheck(extratoken, owodmextrachannelid);
+        }
+        if (settings.huntandbattle == "true") {
+            if (global.extrabanc) {
+                setTimeout(() => {
+                    hunt(extratoken, timehunt, "Extra Token", extrachannelid);
+                    if (settings.inventory.inventorycheck == "true") {
+                        setTimeout(() => {
+                            checkinv(extratoken, extrachannelid, "Extra Token");
+                        }, 2500);
+                    } //E <3
+                }, timehunt);
+
+                setTimeout(() => {
+                    battle(
+                        extratoken,
+
+                        timebattle,
+                        "Extra Token",
+                        extrachannelid
+                    );
+                }, timebattle + 1500);
+            }
+        }
+    }, 17000);
+}
+//-----------------------------------ANIMALS----------------------------------------------//
+if (settings.animals.enable == "true") {
+    setInterval(() => {
+        animals(maintoken, "Main Token", mainchannelid, settings.animals.type);
+        if (global.etoken) {
+            animals(
+                extratoken,
+                "Extra Token",
+                extrachannelid,
+                settings.animals.type
+            );
+        }
+    }, 1200000);
+}
+//-----------------------------------QUEST----------------------------------------------//
+if (settings.autoquest === "true") {
+    getquests(maintoken, mainautoquestchannelid, "Main Token");
+    /*if (global.etoken) {
+        getquests(extratoken, extraautoquestchannelid, "Extra Token");
+    }*/
+}
+//--------------------------------PRAY-------------------------------------------------//
+if (settings.pray == "true") {
+    setInterval(() => {
+        pray(maintoken, "Main Token", mainchannelid);
+        if (global.etoken) {
+            pray(extratoken, "Extra Token", extrachannelid);
+        }
+    }, 303000);
+}
+//--------------------------------CURSE-------------------------------------------------//
+if (settings.curse == "true") {
+    setInterval(() => {
+        curse(maintoken, "Main Token", mainchannelid);
+        if (global.etoken) {
+            curse(extratoken, "Extra Token", extrachannelid);
+        }
+    }, 303500);
+}
+//--------------------------------UPGRADE-------------------------------------------------//
+if (settings.upgradeautohunt.enable == "true") {
+    setInterval(() => {
+        upgradeall(maintoken, "Main Token", mainchannelid);
+        if (global.etoken) {
+            upgradeall(extratoken, "Extra Token", extrachannelid);
+        }
+    }, 1205000);
+}
+
+//--------------------------------GAMBLE-------------------------------------------------//
+if (settings.gamble.coinflip.enable == "true") {
+    setInterval(() => {
+        coinflip(maintoken, "Main Token", mainchannelid);
+        if (global.etoken) {
+            coinflip(extratoken, "Extra Token", extrachannelid);
+        }
+    }, 20000);
+}
+
+if (settings.gamble.slots.enable == "true") {
+    setInterval(() => {
+        slots(maintoken, "Main Token", mainchannelid);
+        if (global.etoken) {
+            slots(extratoken, "Extra Token", extrachannelid);
+        }
+    }, 23000);
+}
+
+//----------------------------------------------------FUNCTIONS----------------------------------------------------//
+
+function checkversion() {
+    var versi = path.join(__dirname, "/version.json");
+
+    if (fs.existsSync(versi)) {
+        console.log();
+    } else {
+        const versiun = https.get(
+            "https://raw.githubusercontent.com/Mid0aria/owofarmbot/main/version.json",
+            function (response) {
+                var versistream = fs.createWriteStream(versi);
+                response.pipe(versistream);
+                versistream.on("finish", () => {
+                    versistream.close();
+                });
+            }
+        );
+    }
+    setTimeout(() => {
+        request.get(
+            {
+                url: "https://raw.githubusercontent.com/Mid0aria/owofarmbot/main/version.json",
+            },
+            function (err, res, body) {
+                let bod = JSON.parse(body);
+
+                var apdater = path.join(__dirname, "/updater.js");
+                if (bod.updater === require("./version.json").updater) {
+                    console.log(
+                        chalk.yellow(
+                            `Updater Repo Version: ${
+                                bod.updater
+                            } / Updater Installed Version: ${
+                                require("./version.json").updater
+                            }`
+                        )
+                    );
+                } else {
+                    const boti = https.get(
+                        "https://raw.githubusercontent.com/Mid0aria/owofarmbot/main/updater.js",
+                        function (response) {
+                            var buotstream = fs.createWriteStream(apdater);
+                            response.pipe(buotstream);
+                            buotstream.on("finish", () => {
+                                buotstream.close();
+                                console.log("updater.js updated");
+                            });
+                        }
+                    );
+                }
+                if (bod.version === version) {
+                    console.log(
+                        chalk.yellow(
+                            `Repo Version: ${bod.version} / Installed Version: ${version}`
+                        )
+                    );
+                } else {
+                    console.clear();
+                    console.log(
+                        chalk.yellow(
+                            `Repo Version: ${bod.version} / Installed Version: ${version}`
+                        )
+                    );
+                    console.log(
+                        chalk.red(
+                            "Your farm bot is not up to date please run node updater.js"
+                        )
+                    );
+                    process.exit(0);
+                }
+            }
+        );
+    }, 1500);
+}
+
+function nonce() {
+    return "1098393848631590" + Math.floor(Math.random() * 9999);
+}
+
+function rantime() {
+    var s = Math.floor(Math.random() * 9);
+    if (s == 0) s = Math.floor(Math.random() * 9);
+    return s + "000";
+}
+
+function autoseed(token) {
+    var seedrandom = require("seedrandom");
+    var rng = seedrandom.xor4096(`seedaccess-entropyverror-apiv10.${token}`);
+    return rng();
+}
+
+function sleepy(t) {
+    console.log(
+        chalk.red(
+            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+        ) +
+            chalk.magenta(` [${t} Token] `) +
+            chalk.red("Waiting ...")
+    );
+}
+
+async function updatequestssocket(p1, p2) {
+    socketio.emit("quest", {
+        quest: `${global.questtitle}`,
+        progress: `${p1} / ${p2}`,
+        date: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+    });
+}
+//----------------------------------------------------Main Features----------------------------------------------------//
+function hunt(token, timehunt, tokentype, channelid) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo hunt",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.blue(" Hunt ✅ (" + timehunt + " ms)")
+            );
+        }
+    );
+}
+
+function battle(token, timebattle, tokentype, channelid) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo battle",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.blue(" Battle ✅ (" + timebattle + " ms)")
+            );
+        }
+    );
+}
+
+function animals(token, tokentype, channelid, type) {
+    let animalcheck = false;
+    var animaltypes = "";
+    var ranks = [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "mythical",
+        "patreon",
+        "cpatreon",
+        "legendary",
+        "gem",
+        "bot",
+        "distorted",
+        "fabled",
+        "special",
+        "hidden",
+    ];
+    for (a in ranks) {
+        var e = ranks[a];
+
+        if (config.settings.animals.animaltype[e] === "true") {
+            var animaltypes = animaltypes + `${e} `;
+        }
+    }
+
+    if (type === "sacrifice" || type === "sell") {
+        animalcheck = true;
+    }
+
+    if (animalcheck) {
+        const request = require("request");
+        request.post(
+            {
+                headers: {
+                    authorization: token,
+                },
+                url: `https://discord.com/api/v9/channels/${channelid}/messages`,
+                json: {
+                    content: `owo ${type} ${animaltypes}`,
+                    nonce: nonce(),
+                    tts: false,
+                    flags: 0,
+                },
+            },
+            function (error, response, body) {
+                console.log(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}` +
+                        ` [${tokentype}]` +
+                        ` Animals ✅ / Type: ${type}`
+                );
+            }
+        );
+    } else {
+        console.log(
+            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}` +
+                ` [${tokentype}]` +
+                ` Animals ❌ / Error: Incorrect Type`
+        );
+    }
+}
+
+function pray(token, tokentype, channelid) {
+    if (tokentype == "Extra Token") {
+        var ct = "owo pray <@" + maintokenuserid + ">";
+    } else {
+        var ct = "owo pray";
+    }
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: ct,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(" Pray ✅")
+            );
+        }
+    );
+}
+
+function curse(token, tokentype, channelid) {
+    if (tokentype == "Extra Token") {
+        var ct = "owo curse <@" + maintokenuserid + ">";
+    } else {
+        var ct = "owo curse";
+    }
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: ct,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(" Curse ✅")
+            );
+        }
+    );
+}
+/*
+function checklist(token, tokentype, channelid) {
+        request.post(
+            {
+                headers: {
+                    authorization: token,
+                },
+                url:
+                    "https://discord.com/api/v9/channels/" +
+                    channelid +
+                    "/messages",
+                json: {
+                    content: "owo cl",
+                    nonce: nonce(),
+                    tts: false,
+                    flags: 0,
+                },
+            },
+            function (error, response, body) {
+          request.get(
+              {
+                  headers: {
+                      authorization: token,
+                  },
+                  url:
+                      "https://discord.com/api/v9/channels/" +
+                      channelid +
+                      "/messages?limit=1",
+              },
+              function (error, response, body) {
+                  var bod = JSON.parse(body);
+                  var cont = bod[0].content;
+              }
+          );
+            }
+        );
+
+}*/
+
+function daily(token, tokentype, channelid) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo daily",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(" Daily ✅")
+            );
+        }
+    );
+}
+
+function coinflip(token, tokentype, channelid) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo coinflip " + settings.gamble.coinflip.amount,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(
+                        //code d by @mid0aria on github
+                        " Gamble / CoinFlip ✅ / Amount: " +
+                            settings.gamble.coinflip.amount
+                    )
+            );
+        }
+    );
+}
+
+function slots(token, tokentype, channelid) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo slots " + settings.gamble.slots.amount,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(
+                        " Gamble / Slots ✅ / Amount: " +
+                            settings.gamble.slots.amount
+                    )
+            );
+        }
+    );
+}
+
+function upgradeall(token, tokentype, channelid) {
+    request.post(
+        {
+            headers: {
+                authorization: token, //E <3
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content:
+                    "owo upgrade " + settings.upgradeautohunt.type + " all",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(" Upgrade AutoHunt ✅")
+            );
+        }
+    );
+}
+//----------------------------------------------------BanCheck + Similar Bypass----------------------------------------------------//
+
+function bancheck(token, channelid) {
+    request.get(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages?limit=1",
+        },
+        function (error, response, body) {
+            var bod = JSON.parse(body);
+            var cont = bod[0].content;
+
+            if (cont.includes("captcha")) {
+                global.mainbanc = false;
+                console.clear();
+                console.log(
+                    chalk.red(
+                        `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                    ) +
+                        chalk.magenta(" [Main Token]") +
+                        chalk.red(" Chat Captcha! ❌")
+                );
+                notifier.notify({
+                    title: "(Main Token) Captcha Detected!",
+                    message: "Solve the captcha and restart the bot!",
+                    icon: "./utilfiles/captcha.png",
+                    sound: true,
+                    wait: true,
+                });
+                notifier.on("click", function () {
+                    console.log("click event detected.");
+                });
+                setTimeout(() => {
+                    process.exit(0);
+                }, 1500);
+            } else {
+                global.mainbanc = true;
+                elaina2(token, channelid);
+                console.log(
+                    chalk.red(
+                        `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                    ) +
+                        chalk.magenta(" [Main Token]") +
+                        chalk.green(" Chat Captcha Checked ✅")
+                );
+                setTimeout(() => {
+                    sleepy("Main");
+                }, 5000);
+            }
+        }
+    );
+}
+
+function extrabancheck(token, channelid) {
+    request.get(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages?limit=1",
+        },
+        function (error, response, body) {
+            var bod = JSON.parse(body);
+            var cont = bod[0].content;
+            if (cont.includes("captcha")) {
+                global.extrabanc = false;
+                console.clear();
+                console.log(
+                    chalk.red(
+                        `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                    ) +
+                        chalk.magenta(" [Extra Token]") +
+                        chalk.red(" Chat Captcha! ❌")
+                );
+                notifier.notify({
+                    title: "(Extra Token) Captcha Detected!",
+                    message: "Solve the captcha and restart the bot!",
+                    icon: "./utilfiles/captcha.png",
+                    sound: true,
+                    wait: true,
+                });
+                notifier.on("click", function () {
+                    console.log("click event detected.");
+                });
+                setTimeout(() => {
+                    process.exit(0);
+                }, 1500);
+            } else {
+                global.extrabanc = true;
+                elaina2(token, channelid);
+                console.log(
+                    chalk.red(
+                        `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                    ) +
+                        chalk.magenta(" [Extra Token]") +
+                        chalk.green(" Chat Captcha Checked ✅")
+                );
+                setTimeout(() => {
+                    sleepy("Extra");
+                }, 5000);
+            }
+        }
+    );
+}
+
+function dmbancheck(token, channelid) {
+    request.get(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages?limit=1",
+        },
+        function (error, response, body) {
+            var bod = JSON.parse(body);
+            if (bod[0] == undefined) {
+                dmprotectprouwu(token, channelid, "Main Token");
+            } else {
+                var cont = bod[0].content;
+
+                if (cont.includes("Are you a real human?")) {
+                    global.mainbanc = false;
+                    console.clear();
+                    console.log(
+                        chalk.red(
+                            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                        ) +
+                            chalk.magenta(" [Main Token]") +
+                            chalk.red(" DM Captcha! ❌")
+                    );
+                    notifier.notify({
+                        title: "(Main Token) Captcha Detected!",
+                        message: "Solve the captcha and restart the bot!",
+                        icon: "./utilfiles/captcha.png",
+                        sound: true,
+                        wait: true,
+                    });
+                    notifier.on("click", function () {
+                        console.log("click event detected.");
+                    });
+                    setTimeout(() => {
+                        process.exit(0);
+                    }, 1500);
+                } else {
+                    global.mainbanc = true;
+                    console.log(
+                        chalk.red(
+                            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                        ) +
+                            chalk.magenta(" [Main Token]") +
+                            chalk.green(" DM Captcha Checked ✅")
+                    );
+
+                    setTimeout(() => {
+                        sleepy("Main");
+                    }, 2000);
+                }
+            }
+        }
+    );
+}
+//wheres my mind :(
+function dmextrabancheck(token, channelid) {
+    request.get(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages?limit=1",
+        },
+        function (error, response, body) {
+            var bod = JSON.parse(body);
+            if (bod[0] == undefined) {
+                dmprotectprouwu(token, channelid, "Extra Token");
+            } else {
+                var cont = bod[0].content;
+                if (cont.includes("Are you a real human?")) {
+                    global.extrabanc = false;
+                    console.clear();
+                    console.log(
+                        chalk.red(
+                            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                        ) +
+                            chalk.magenta(" [Extra Token]") +
+                            chalk.red(" DM Captcha! ❌")
+                    );
+                    notifier.notify({
+                        title: "(Extra Token) Captcha Detected!",
+                        message: "Solve the captcha and restart the bot!",
+                        icon: "./utilfiles/captcha.png",
+                        sound: true,
+                        wait: true,
+                    });
+                    notifier.on("click", function () {
+                        console.log("click event detected.");
+                    });
+                    setTimeout(() => {
+                        process.exit(0);
+                    }, 1500);
+                } else {
+                    global.extrabanc = true;
+                    console.log(
+                        chalk.red(
+                            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                        ) +
+                            chalk.magenta(" [Extra Token]") +
+                            chalk.green(" DM Captcha Checked ✅")
+                    );
+                    setTimeout(() => {
+                        sleepy("Extra");
+                    }, 2000);
+                }
+            }
+        }
+    );
+}
+
+function dmprotectprouwu(token, channelid, tokentype) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+                "super-x": autoseed(token),
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "hi bro",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (err, res, body) {
+            if (body) {
+                console.log(
+                    chalk.red(
+                        `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                    ) +
+                        chalk.magenta(" [" + tokentype + "]") +
+                        chalk.red(" OwO dm channel id incorrect ❌")
+                );
+            }
+        }
+    );
+}
+
+function elaina2(token, channelid, phrasesFilePath) {
+    // Read the JSON
+    fs.readFile("./phrases/phrases.json", "utf8", (err, data) => {
+        if (err) {
+            console.error("Error reading JSON file:", err);
+            return;
+        }
+
+        // Parse the JSON data
+        try {
+            const phrasesObject = JSON.parse(data);
+            const phrases = phrasesObject.phrases;
+
+            if (!phrases || !phrases.length) {
+                console.log("Phrases array is undefined or empty.");
+                return;
+            }
+
+            let result = Math.floor(Math.random() * phrases.length);
+
+            var ilu = phrases[result];
+            //E <3
+            request.post({
+                headers: {
+                    authorization: token,
+                },
+                url:
+                    "https://discord.com/api/v9/channels/" +
+                    channelid +
+                    "/messages",
+                json: {
+                    content: ilu,
+                    nonce: nonce(),
+                    tts: false,
+                    flags: 0,
+                },
+            });
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+        }
+    });
+}
+
+//----------------------------------------------------Inventory----------------------------------------------------//
+
+function checkinv(token, channelid, tokentype) {
+    if (settings.inventory.gemcheck == "true") {
+        request.get(
+            {
+                headers: {
+                    authorization: token,
+                },
+                url:
+                    "https://discord.com/api/v9/channels/" +
+                    channelid +
+                    "/messages?limit=1",
+            },
+            function (error, response, body) {
+                var bod = JSON.parse(body);
+                var cont = bod[0].content;
+                if (
+                    cont.includes("You found:") ||
+                    cont.includes("and caught a")
+                ) {
+                    var collection = collect(["alulu"]);
+                    console.log(
+                        chalk.red(
+                            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                        ) +
+                            chalk.magenta(" [" + tokentype + "]") +
+                            chalk.yellow(" inventory checking 🔍 (type-1)")
+                        //cod ed by @mid0aria on github
+                    );
+                    if (!cont.includes("gem1")) {
+                        collection.push("huntgem");
+                    }
+                    if (!cont.includes("gem3")) {
+                        collection.push("empgem");
+                    }
+                    if (!cont.includes("gem4")) {
+                        collection.push("luckgem");
+                    }
+                    if (
+                        cont.includes("gem1") &&
+                        cont.includes("gem3") &&
+                        cont.includes("gem4")
+                    ) {
+                        getinv(
+                            token,
+                            channelid,
+                            tokentype,
+                            "nogem",
+                            collect(["nocollection"])
+                        );
+                    } else {
+                        getinv(
+                            token,
+                            channelid,
+                            tokentype,
+                            "gemvar",
+                            collection
+                        );
+                    }
+                }
+            }
+        );
+    } else {
+        console.log(
+            chalk.red(
+                `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+            ) +
+                chalk.magenta(" [" + tokentype + "]") +
+                chalk.yellow(" inventory checking 🔍 (type-2)")
+        );
+        getinv(token, channelid, tokentype, "nogem", collect(["nocollection"]));
+    }
+}
+
+function getinv(token, channelid, tokentype, gemc, collectc) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo inv",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {}
+    ); //coded by @mid0aria on github
+    setTimeout(() => {
+        request.get(
+            {
+                headers: {
+                    authorization: token,
+                },
+                url:
+                    "https://discord.com/api/v9/channels/" +
+                    channelid +
+                    "/messages?limit=1",
+            },
+            function (error, response, body) {
+                var bod = JSON.parse(body);
+                var cont = bod[0].content;
+                if (gemc == "gemvar") {
+                    var empgem = "";
+                    var empgemstatus = false;
+                    var luckgem = "";
+                    var luckgemstatus = false;
+                    var huntgem = "";
+                    var huntgemstatus = false;
+                    var specialgem = "";
+                    var specialgemstatus = false;
+                    var gem = "";
+                    var gemusebro = false;
+
+                    if (collectc.contains("huntgem")) {
+                        switch (true) {
+                            case cont.includes("`057`"):
+                                huntgem = "57";
+                                huntgemstatus = true;
+                                break;
+                            case cont.includes("`056`"):
+                                huntgem = "56";
+                                huntgemstatus = true;
+                                break;
+                            case cont.includes("`055`"):
+                                huntgem = "55";
+                                huntgemstatus = true;
+                                break;
+                            case cont.includes("`054`"):
+                                huntgem = "54";
+                                huntgemstatus = true;
+                                break;
+                            case cont.includes("`053`"):
+                                huntgem = "53";
+                                huntgemstatus = true;
+                                break;
+                            case cont.includes("`052`"):
+                                huntgem = "52";
+                                huntgemstatus = true;
+                                break;
+                            case cont.includes("`051`"):
+                                huntgem = "51";
+                                huntgemstatus = true;
+                                break;
+                            default:
+                                huntgemstatus = false;
+                                break;
+                        }
+                    }
+                    if (collectc.contains("empgem")) {
+                        switch (true) {
+                            case cont.includes("`071`"):
+                                empgem = "71";
+                                empgemstatus = true;
+                                break;
+                            case cont.includes("`070`"):
+                                empgem = "70";
+                                empgemstatus = true;
+                                break;
+                            case cont.includes("`069`"):
+                                empgem = "69";
+                                empgemstatus = true;
+                                break;
+                            case cont.includes("`068`"):
+                                empgem = "68";
+                                empgemstatus = true;
+                                break;
+                            case cont.includes("`067`"):
+                                empgem = "67";
+                                empgemstatus = true;
+                                break;
+                            case cont.includes("`066`"):
+                                empgem = "66";
+                                empgemstatus = true;
+                                break;
+                            case cont.includes("`065`"):
+                                empgem = "65";
+                                empgemstatus = true;
+                                break;
+                            default:
+                                empgemstatus = false;
+                                break;
+                        }
+                    }
+                    if (collectc.contains("luckgem")) {
+                        switch (true) {
+                            case cont.includes("`078`"):
+                                luckgem = "78";
+                                luckgemstatus = true;
+                                break;
+                            case cont.includes("`077`"):
+                                luckgem = "77";
+                                luckgemstatus = true;
+                                break;
+                            case cont.includes("`076`"):
+                                luckgem = "76";
+                                luckgemstatus = true;
+                                break;
+                            case cont.includes("`075`"):
+                                luckgem = "75";
+                                luckgemstatus = true;
+                                break;
+                            case cont.includes("`074`"):
+                                luckgem = "74";
+                                luckgemstatus = true;
+                                break;
+                            case cont.includes("`073`"):
+                                luckgem = "73";
+                                luckgemstatus = true;
+                                break;
+                            case cont.includes("`072`"):
+                                luckgem = "72";
+                                luckgemstatus = true;
+                                break;
+                            default:
+                                luckgemstatus = false;
+                                break;
+                        }
+                    }
+
+                    if (collectc.contains("specialgem")) {
+                        switch (true) {
+                            case cont.includes("`085`"):
+                                specialgem = "85";
+                                specialgemstatus = true;
+                                break;
+                            case cont.includes("`084`"):
+                                specialgem = "84";
+                                specialgemstatus = true;
+                                break;
+                            case cont.includes("`083`"):
+                                specialgem = "83";
+                                specialgemstatus = true;
+                                break;
+                            case cont.includes("`082`"):
+                                specialgem = "82";
+                                specialgemstatus = true;
+                                break;
+                            case cont.includes("`081`"):
+                                specialgem = "81";
+                                specialgemstatus = true;
+                                break;
+                            case cont.includes("`080`"):
+                                specialgem = "80";
+                                specialgemstatus = true;
+                                break;
+                            case cont.includes("`079`"):
+                                specialgem = "79";
+                                specialgemstatus = true;
+                                break;
+                            default:
+                                specialgemstatus = false;
+                                break;
+                        }
+                    }
+
+                    if (huntgemstatus) {
+                        var gem = gem + ` ${huntgem}`;
+                        gemusebro = true;
+                    }
+                    if (empgemstatus) {
+                        var gem = gem + ` ${empgem}`;
+                        gemusebro = true;
+                    }
+                    if (luckgemstatus) {
+                        var gem = gem + ` ${luckgem}`;
+                        gemusebro = true;
+                    }
+                    if (specialgemstatus) {
+                        var gem = gem + ` ${specialgem}`;
+                        gemusebro = true;
+                    }
+                    if (gemusebro) {
+                        gemuse(token, gem, channelid, tokentype);
+                    }
+                }
+
+                if (settings.inventory.lootboxcheck == "true") {
+                    if (cont.includes("`050`")) {
+                        setTimeout(() => {
+                            boxuse(token, "lootbox all", channelid, tokentype);
+                        }, 2000);
+                    }
+                }
+
+                if (settings.inventory.fabledlootboxcheck == "true") {
+                    if (cont.includes("`049`")) {
+                        setTimeout(() => {
+                            boxuse(
+                                token,
+                                "lootbox fabled all",
+                                channelid,
+                                tokentype
+                            );
+                        }, 2000);
+                    }
+                }
+
+                if (settings.inventory.cratecheck == "true") {
+                    if (cont.includes("`100`")) {
+                        setTimeout(() => {
+                            boxuse(token, "crate all", channelid, tokentype);
+                        }, 2000);
+                    }
+                }
+
+                if (settings.inventory.eventcheck == "true") {
+                    if (cont.includes("`018`")) {
+                        // valentines day
+                        setTimeout(() => {
+                            eventuse(token, "18", channelid, tokentype);
+                        }, 2000); //E <3
+                    }
+                    if (cont.includes("`019`")) {
+                        // anniversary day
+                        setTimeout(() => {
+                            eventuse(token, "19", channelid, tokentype);
+                        }, 2000);
+                    }
+                    if (cont.includes("`020`")) {
+                        // fakelootbox
+                        setTimeout(() => {
+                            eventuse(token, "20", channelid, tokentype);
+                        }, 2000);
+                    }
+                    if (cont.includes("`23`")) {
+                        setTimeout(() => {
+                            eventuse(token, "23", channelid, tokentype);
+                        }, 2000);
+                    }
+                }
+            }
+        );
+    }, 3000);
+}
+
+function gemuse(token, gem, channelid, tokentype) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo use " + gem,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "]") +
+                    chalk.yellow(" Gem ✅")
+            );
+        }
+    );
+}
+
+function boxuse(token, box, channelid, tokentype) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo " + box,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "] ") +
+                    chalk.yellow(box + " ✅")
+            );
+        }
+    );
+}
+
+function eventuse(token, eventbox, channelid, tokentype) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo use " + eventbox,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        function (error, response, body) {
+            switch (eventbox) {
+                case "18":
+                    var namebox = "Love Letter (Valentine's Day)";
+                    break;
+                case "19":
+                    var namebox = "Anniversary Present";
+                case "20":
+                    var namebox = "Fake Lootbox";
+            }
+
+            console.log(
+                chalk.red(
+                    `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                ) +
+                    chalk.magenta(" [" + tokentype + "] ") +
+                    chalk.yellow(namebox + " ✅")
+            );
+        }
+    );
+}
+//. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. ... __ .
+//----------------------------------------------------Quest----------------------------------------------------//
+async function getquests(token, channelid, tokentype) {
+    request.post(
+        {
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo quest",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        },
+        async function (error, response, body) {
+            await delay(3500);
+            request.get(
+                {
+                    headers: {
+                        authorization: token,
+                    },
+                    url:
+                        "https://discord.com/api/v9/channels/" +
+                        channelid +
+                        "/messages?limit=1",
+                },
+                async function (error, response, body) {
+                    var bod = JSON.parse(body);
+                    var cont = bod[0].embeds;
+                    await delay(2500);
+                    console.log(
+                        chalk.red(
+                            `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                        ) +
+                            chalk.magenta(` ${tokentype}`) +
+                            chalk.yellow("Checking quest 🔎")
+                    );
+                    if (
+                        cont[0].description.includes(
+                            "You finished all of your quests!"
+                        )
+                    ) {
+                        global.quest = false;
+                    } else {
+                        var quest = cont[0].description
+                            .split("**1. ")[1]
+                            .split("**")[0];
+                        global.questtitle = `${quest}`;
+                        var progress1 = cont[0].description
+                            .split("Progress: [")[1]
+                            .split("/")[0];
+                        var progress2 = cont[0].description
+                            .split("/")[1]
+                            .split("]")[0];
+
+                        if (quest.includes("Battle")) {
+                            try {
+                                quest = cont[0].description
+                                    .split("**2. ")[1]
+                                    .split("**")[0];
+                            } catch (error) {
+                                global.quest = false;
+                            }
+                        }
+
+                        if (global.quest) {
+                            socketio.emit("quest", {
+                                quest: `${global.questtitle}`,
+                                progress: `${progress1} / ${progress2}`,
+                                date: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+                            });
+
+                            switch (true) {
+                                case quest.includes("Say 'owo'"):
+                                    global.quest = false;
+                                    questsayowo(
+                                        token,
+                                        channelid,
+                                        parseInt(progress1),
+                                        parseInt(progress2)
+                                    );
+                                    break; //E <3
+                                case quest.includes(
+                                    "xp from hunting and battling"
+                                ):
+                                    global.quest = false;
+                                    xpquests(token, channelid);
+
+                                case quest.includes("Gamble"):
+                                    global.quest = false;
+                                    questgamble(
+                                        token,
+                                        channelid,
+                                        parseInt(progress1), //coded by @mid0aria on github
+                                        parseInt(progress2)
+                                    );
+                                    break;
+
+                                case quest.includes(
+                                    "Have a friend curse you"
+                                ) && global.etoken:
+                                    global.quest = false;
+                                    questcurseme(
+                                        extratoken,
+                                        maintokenuserid,
+                                        channelid,
+                                        parseInt(progress1),
+                                        parseInt(progress2)
+                                    );
+                                    break;
+
+                                case quest.includes(
+                                    "Have a friend pray to you"
+                                ) && global.etoken:
+                                    global.quest = false; //coded by @mid0aria on github
+                                    questprayme(
+                                        extratoken,
+                                        maintokenuserid,
+                                        channelid,
+                                        parseInt(progress1),
+                                        parseInt(progress2)
+                                    );
+                                    break;
+
+                                case quest.includes("Battle with a friend") &&
+                                    global.etoken:
+                                    global.quest = false;
+                                    questbattlefriend(
+                                        token,
+                                        extratoken,
+                                        maintokenuserid,
+                                        channelid,
+                                        parseInt(progress1),
+                                        parseInt(progress2)
+                                    );
+                                    break;
+                                case quest.includes(
+                                    "Receive a cookie from 1 friends"
+                                ) && global.etoken:
+                                    global.quest = false;
+                                    questcookiefriend(
+                                        extratoken,
+                                        maintokenuserid,
+                                        channelid,
+                                        parseInt(progress1),
+                                        parseInt(progress2)
+                                    );
+                            }
+                        }
+                    }
+                }
+            );
+        }
+    );
+}
+
+async function questsayowo(token, channelid, pro1, pro2) {
+    for (let np = pro2 - pro1; np > 0; np--) {
+        request.post({
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: "owo",
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        var socketp = pro1;
+        var socketpro1 = socketp++;
+        updatequestssocket(socketpro1, pro2);
+        await delay(32500);
+        for (let sayowoelaina = 0; sayowoelaina < 4; sayowoelaina++) {
+            elaina2(token, channelid);
+            await delay(2000);
+        }
+    }
+    global.quest = true;
+    getquests(token, channelid);
+}
+
+async function xpquests(token, channelid) {
+    await delay(540000);
+    global.quest = true;
+    getquests(token, channelid);
+}
+
+async function questcurseme(token, userid, channelid, pro1, pro2) {
+    for (let np = pro2 - pro1; np > 0; np--) {
+        request.post({
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: `owo curse <@${userid}>`,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        var socketp = pro1;
+        var socketpro1 = socketp++;
+        updatequestssocket(socketpro1, pro2);
+        await delay(302000);
+    }
+    global.quest = true;
+    getquests(token, channelid);
+}
+
+async function questprayme(token, userid, channelid, pro1, pro2) {
+    for (let np = pro2 - pro1; np > 0; np--) {
+        request.post({
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: `owo pray <@${userid}>`,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        var socketp = pro1;
+        var socketpro1 = socketp++;
+        updatequestssocket(socketpro1, pro2);
+        await delay(302000);
+    }
+    global.quest = true;
+    getquests(token, channelid);
+}
+
+async function questbattlefriend(
+    maintoken,
+    extratoken,
+    mainuserid,
+    channelid,
+    pro1,
+    pro2
+) {
+    for (let np = pro2 - pro1; np > 0; np--) {
+        request.post({
+            headers: {
+                authorization: extratoken,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: `owo battle <@${mainuserid}>`,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        await delay(7800);
+        request.post({
+            headers: {
+                authorization: maintoken,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: `owo ab`,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        var socketp = pro1;
+        var socketpro1 = socketp++;
+        updatequestssocket(socketpro1, pro2);
+        await delay(15000);
+    }
+    global.quest = true;
+    getquests(maintoken, channelid);
+}
+
+async function questgamble(token, channelid, pro1, pro2) {
+    for (let np = pro2 - pro1; np > 0; np--) {
+        request.post({
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: `owo cf 1`,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        var socketp = pro1;
+        var socketpro1 = socketp++;
+        updatequestssocket(socketpro1, pro2);
+        await delay(16000);
+    }
+    global.quest = true;
+    getquests(token, channelid);
+}
+
+async function questcookiefriend(token, userid, channelid, pro1, pro2) {
+    for (let np = pro2 - pro1; np > 0; np--) {
+        request.post({
+            headers: {
+                authorization: token,
+            },
+            url:
+                "https://discord.com/api/v9/channels/" +
+                channelid +
+                "/messages",
+            json: {
+                content: `owo cookie <@${userid}>`,
+                nonce: nonce(),
+                tts: false,
+                flags: 0,
+            },
+        });
+        var socketp = pro1;
+        var socketpro1 = socketp++;
+        updatequestssocket(socketpro1, pro2);
+        await delay(302000);
+    }
+    global.quest = true;
+    getquests(token, channelid);
+}
